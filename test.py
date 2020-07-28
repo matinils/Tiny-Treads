@@ -5,8 +5,6 @@ SCREEN_HEIGHT = 800
 SCREEN_TITLE = "Test Window"
 RADIUS = 150
 
-print('Hello world')
-
 arcade.open_window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
 arcade.set_background_color(arcade.color.BLUE)
 arcade.start_render()
