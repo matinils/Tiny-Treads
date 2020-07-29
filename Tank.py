@@ -1,5 +1,5 @@
 import arcade
-# test
+
 class Tank:
 
 	SPRITE_SHEET_PATH = "./res/sprite-sheet.png"
