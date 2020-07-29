@@ -25,21 +25,21 @@ class TinyTreads(arcade.Window):
 	def on_update(self, delta_time: float):
 		for t in self.tanks:
 			t.update(delta_time)
-		self.tank_sprites.update()
+		self.tank_sprites.on_update(delta_time)
 
 	def on_key_press(self, symbol: int, modifiers: int):
 		if symbol == arcade.key.W:
-			self.tanks[0].speed = 1
+			self.tanks[0].speed = 50
 		if symbol == arcade.key.S:
-			self.tanks[0].speed = -0.75
+			self.tanks[0].speed = -30
 		if symbol == arcade.key.A:
-			self.tanks[0].br_speed = 1
+			self.tanks[0].br_speed = 50
 		if symbol == arcade.key.D:
-			self.tanks[0].br_speed = -1
+			self.tanks[0].br_speed = -50
 		if symbol == arcade.key.Q:
-			self.tanks[0].tr_speed = 1
+			self.tanks[0].tr_speed = 50
 		if symbol == arcade.key.E:
-			self.tanks[0].tr_speed = -1
+			self.tanks[0].tr_speed = -50
 		if symbol == arcade.key.LSHIFT:
 			self.tanks[0].turret_lock = not self.tanks[0].turret_lock
 			self.tanks[0].turret_lock_sprite.alpha = (255 if self.tanks[0].turret_lock else 0)

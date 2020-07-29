@@ -1,5 +1,6 @@
 import arcade
 import math
+from VSprite import VSprite
 
 class Tank:
 
@@ -14,33 +15,33 @@ class Tank:
 		self.aim_speed = 0
 		self.turret_lock = True
 
-		self.body_sprite = arcade.Sprite(
+		self.body_sprite = VSprite(
 			Tank.SPRITE_SHEET_PATH, 1.0, 
 			*sprite_pos, 75, 50,
 			x, y
 		)
 		self.body_sprite.angle = angle
 
-		self.turret_sprite = arcade.Sprite(
+		self.turret_sprite = VSprite(
 			Tank.SPRITE_SHEET_PATH, 1.0,
 			sprite_pos[0], sprite_pos[1] + 50, 125, 50,
 			x, y
 		)
 		self.turret_sprite.angle = angle
 
-		self.turret_lock_sprite = arcade.Sprite(
+		self.turret_lock_sprite = VSprite(
 			Tank.SPRITE_SHEET_PATH, 1.0,
 			sprite_pos[0] + 75, sprite_pos[1], 10, 14,
 			x, y
 		)
 
-		self.reticle_sprite = arcade.Sprite(
+		self.reticle_sprite = VSprite(
 			Tank.SPRITE_SHEET_PATH, 1.0,
 			sprite_pos[0] + 85, sprite_pos[1], 13, 13,
 			x, y + 120
 		)
 
-		self.crosshair_sprite = arcade.Sprite(
+		self.crosshair_sprite = VSprite(
 			Tank.SPRITE_SHEET_PATH, 1.0,
 			sprite_pos[0] + 75, sprite_pos[1] + 14, 27, 27,
 			x, y + 120
