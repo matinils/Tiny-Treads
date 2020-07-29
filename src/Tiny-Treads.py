@@ -38,4 +38,3 @@ if __name__ == '__main__':
 	app = TinyTreads()
 	app.setup()
 	arcade.run()
-	print("Test")
