@@ -6,10 +6,10 @@ class Tank:
 	SPRITE_SHEET_PATH = "./../res/sprite-sheet.png"
 
 	def __init__(self, sprite_pos, x, y, angle):
-		# self.body_angle = angle
-		# self.turret_angle = 0
 		self.speed = 0
 		self.br_speed = 0
+		self.tr_speed = 0
+		self.turret_lock = True
 
 		self.body_sprite = arcade.Sprite(
 			Tank.SPRITE_SHEET_PATH, 1.0, 
@@ -30,3 +30,4 @@ class Tank:
 		self.body_sprite.velocity = velocity
 		self.turret_sprite.velocity = velocity
 		self.body_sprite.change_angle = self.br_speed
+		self.turret_sprite.change_angle = self.tr_speed + (0 if self.turret_lock else self.br_speed)
