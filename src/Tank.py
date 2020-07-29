@@ -17,3 +17,7 @@ class Tank:
 			x, y)
 		self.turret_angle = 0
 		self.turret_sprite.angle = angle
+
+	def set_velocity(self, x, y):
+		self.body_sprite.velocity = (x, y)
+		self.turret_sprite.velocity = (x, y)
