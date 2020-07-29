@@ -2,7 +2,7 @@ import arcade
 
 class Tank:
 
-	SPRITE_SHEET_PATH = "./res/sprite-sheet.png"
+	SPRITE_SHEET_PATH = "./../res/sprite-sheet.png"
 
 	def __init__(self, sprite_pos, x, y, angle):
 		self.body_sprite = arcade.Sprite(
