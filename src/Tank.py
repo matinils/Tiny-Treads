@@ -46,7 +46,7 @@ class Tank:
 			x, y + 120
 		)
 
-	def update(self):
+	def update(self, delta_time):
 		velocity = (
 			self.speed * math.cos(self.body_sprite.radians),
 			self.speed * math.sin(self.body_sprite.radians))
@@ -56,7 +56,7 @@ class Tank:
 		self.body_sprite.change_angle = self.br_speed
 		self.turret_sprite.change_angle = self.tr_speed + (0 if self.turret_lock else self.br_speed)
 
-		self.aim_distance += self.aim_speed
+		self.aim_distance += self.aim_speed * delta_time
 		self.aim_distance = max(min(self.aim_distance, 1.0), 0.0)
 		aim_coord = (120 + (self.max_ad - 120) * self.aim_distance)
 		aim_coord_x = aim_coord * math.cos(self.turret_sprite.radians) + self.turret_sprite.center_x
