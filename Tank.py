@@ -6,13 +6,13 @@ class Tank:
 
 	def __init__(self, sprite_pos, x, y, angle):
 		self.body_sprite = arcade.Sprite(
-			SPRITE_SHEET_PATH, 1.0, 
+			Tank.SPRITE_SHEET_PATH, 1.0, 
 			*sprite_pos, 50, 75,
 			x, y)
 		self.body_sprite.angle = angle
 
 		self.turret_sprite = arcade.Sprite(
-			SPRITE_SHEET_PATH, 1.0,
+			Tank.SPRITE_SHEET_PATH, 1.0,
 			sprite_pos[0] + 50, sprite_pos[1], 50, 125,
 			x, y)
 		self.turret_angle = 0
