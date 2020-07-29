@@ -28,7 +28,7 @@ class TinyTreads(arcade.Window):
 
 	def setup(self):
 		arcade.set_background_color((17,17,17))
-		self.add_tank(self.tanks_sprite_dict["Tank 1"], 200, 200, 0)
+		self.add_tank(self.tank_sprite_dict["Tank 1"], 200, 200, 0)
 
 
 if __name__ == '__main__':
