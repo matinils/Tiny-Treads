@@ -28,11 +28,11 @@ class TinyTreads(arcade.Window):
 
 	def on_key_press(self, symbol: int, modifiers: int):
 		if symbol == arcade.key.W:
-			self.tanks[0].set_velocity(1,0)
+			self.tanks[0].set_speed(1)
 
 	def on_key_release(self, symbol: int, modifiers: int):
 		if symbol == arcade.key.W:
-			self.tanks[0].set_velocity(0,0)
+			self.tanks[0].set_speed(0)
 
 	def add_tank(self, sprite_pos, x, y, angle):
 		tank = Tank(sprite_pos, x, y, angle)
@@ -42,7 +42,7 @@ class TinyTreads(arcade.Window):
 
 	def setup(self):
 		arcade.set_background_color((17,17,17))
-		self.add_tank(self.tank_sprite_dict["Tank 1"], 200, 200, 0)
+		self.add_tank(self.tank_sprite_dict["Tank 1"], 200, 200, 45)
 
 if __name__ == '__main__':
 	app = TinyTreads()
