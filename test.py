@@ -21,13 +21,14 @@ class TinyTreads(arcade.Window):
 		arcade.start_render()
 		self.tank_sprites.draw()
 
-	def add_tank(self, sprites, x, y, angle):
-		tank = Tank(sprites[0], sprites[1], x, y, angle)
-		self.tank_sprites.append(tank.sprite)
+	def add_tank(self, sprite_pos, x, y, angle):
+		tank = Tank(sprite_pos, x, y, angle)
+		self.tank_sprites.append(tank.body_sprite)
+		self.tank_sprites.append(tank.turret_sprite)
 
 	def setup(self):
 		arcade.set_background_color((17,17,17))
-		self.add_tank(self.tanks_sprite_dict["Tank 1"],200, 200, 0)
+		self.add_tank(self.tank_sprite_dict["Tank 1"], 200, 200, 0)
 
 
 if __name__ == '__main__':
