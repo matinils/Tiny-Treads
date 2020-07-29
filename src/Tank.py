@@ -14,14 +14,22 @@ class Tank:
 		self.body_sprite = arcade.Sprite(
 			Tank.SPRITE_SHEET_PATH, 1.0, 
 			*sprite_pos, 75, 50,
-			x, y)
+			x, y
+		)
 		self.body_sprite.angle = angle
 
 		self.turret_sprite = arcade.Sprite(
 			Tank.SPRITE_SHEET_PATH, 1.0,
 			sprite_pos[0], sprite_pos[1] + 50, 125, 50,
-			x, y)
+			x, y
+		)
 		self.turret_sprite.angle = angle
+
+		self.turret_lock_sprite = arcade.Sprite(
+			Tank.SPRITE_SHEET_PATH, 1.0,
+			sprite_pos[0] + 75, sprite_pos[1], 10, 14,
+			x, y
+		)
 
 	def update(self):
 		velocity = (
@@ -29,5 +37,6 @@ class Tank:
 			self.speed * math.sin(self.body_sprite.radians))
 		self.body_sprite.velocity = velocity
 		self.turret_sprite.velocity = velocity
+		self.turret_lock_sprite.velocity = velocity
 		self.body_sprite.change_angle = self.br_speed
 		self.turret_sprite.change_angle = self.tr_speed + (0 if self.turret_lock else self.br_speed)

@@ -41,6 +41,9 @@ class TinyTreads(arcade.Window):
 			self.tanks[0].tr_speed = 1
 		if symbol == arcade.key.E:
 			self.tanks[0].tr_speed = -1
+		if symbol == arcade.key.LSHIFT:
+			self.tanks[0].turret_lock = not self.tanks[0].turret_lock
+			self.tanks[0].turret_lock_sprite.alpha = (255 if self.tanks[0].turret_lock else 0)
 
 	def on_key_release(self, symbol: int, modifiers: int):
 		if symbol == arcade.key.W or symbol == arcade.key.S:
@@ -49,13 +52,12 @@ class TinyTreads(arcade.Window):
 			self.tanks[0].br_speed = 0
 		if symbol == arcade.key.Q or symbol == arcade.key.E:
 			self.tanks[0].tr_speed = 0
-		if symbol == arcade.key.LSHIFT:
-			self.tanks[0].turret_lock = not self.tanks[0].turret_lock
 
 	def add_tank(self, sprite_pos, x, y, angle):
 		tank = Tank(sprite_pos, x, y, angle)
 		self.tank_sprites.append(tank.body_sprite)
 		self.tank_sprites.append(tank.turret_sprite)
+		self.tank_sprites.append(tank.turret_lock_sprite)
 		self.tanks.append(tank)
 
 	def setup(self):
