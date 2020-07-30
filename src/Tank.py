@@ -6,7 +6,9 @@ class Tank:
 
 	SPRITE_SHEET_PATH = "./../res/sprite-sheet.png"
 
-	def __init__(self, sprite_pos, x, y, angle, max_ad):
+	def __init__(self, sprite_list, sprite_pos, x, y, angle, max_ad):
+		self.sprite_list = sprite_list
+
 		self.speed = 0
 		self.br_speed = 0
 		self.tr_speed = 0
@@ -64,11 +66,16 @@ class Tank:
 		))
 		self.bullets[-1].angle = self.turret_sprite.angle
 		self.bullets[-1].velocity = (
-			100 * math.cos(self.bullets[-1].radians),
-			100 * math.sin(self.bullets[-1].radians)
+			200 * math.cos(self.bullets[-1].radians),
+			200 * math.sin(self.bullets[-1].radians)
 		)
 		self.bullets[-1].hit_x = self.reticle_sprite.center_x
 		self.bullets[-1].hit_y = self.reticle_sprite.center_y
+		self.bullets[-1].prev_dist = math.hypot(
+			self.bullets[-1].center_x - self.bullets[-1].hit_x,
+			self.bullets[-1].center_y - self.bullets[-1].hit_y
+		)
+		self.sprite_list.append(self.bullets[-1])
 
 	def update(self, delta_time):
 		velocity = (
@@ -92,5 +99,12 @@ class Tank:
 		self.reticle_sprite.center_y = aim_coord_y
 
 		for index, bullet in enumerate(self.bullets):
-			if math.hypot(bullet.center_x - bullet.hit_x, bullet.center_y - bullet.hit_y) < 100:
+			new_dist = math.hypot(
+				bullet.center_x - bullet.hit_x,
+				bullet.center_y - bullet.hit_y
+			)
+			if bullet.prev_dist < new_dist:
 				self.bullets.pop(index)
+				bullet.kill()
+			else:
+				bullet.prev_dist = new_dist

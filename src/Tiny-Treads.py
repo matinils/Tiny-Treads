@@ -1,8 +1,8 @@
 import arcade
 from Tank import Tank
 
-SCREEN_WIDTH = 500
-SCREEN_HEIGHT = 500
+SCREEN_WIDTH = 1000
+SCREEN_HEIGHT = 1000
 SCREEN_TITLE = "Tiny Treads"
 
 
@@ -68,7 +68,7 @@ class TinyTreads(arcade.Window):
 
 
 	def add_tank(self, sprite_pos, x, y, angle, max_ad):
-		tank = Tank(sprite_pos, x, y, angle, max_ad)
+		tank = Tank(self.tank_sprites, sprite_pos, x, y, angle, max_ad)
 		self.tank_sprites.append(tank.body_sprite)
 		self.tank_sprites.append(tank.turret_sprite)
 		self.tank_sprites.append(tank.turret_lock_sprite)
