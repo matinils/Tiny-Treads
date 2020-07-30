@@ -47,10 +47,34 @@ class Tank:
 			x, y + 120
 		)
 
+		self.bullets = []
+		self.bullet_sprite_pos = (sprite_pos[0] + 98, sprite_pos[1])
+
+	def turret_tip(self):
+		return (
+			self.turret_sprite.center_x + 50 * math.cos(self.turret_sprite.radians),
+			self.turret_sprite.center_y + 50 * math.sin(self.turret_sprite.radians)
+		)
+
+	def shoot(self):
+		self.bullets.append(VSprite(
+			Tank.SPRITE_SHEET_PATH, 1.0,
+			*self.bullet_sprite_pos, 15, 6,
+			*self.turret_tip()
+		))
+		self.bullets[-1].angle = self.turret_sprite.angle
+		self.bullets[-1].velocity = (
+			100 * math.cos(self.bullets[-1].radians),
+			100 * math.sin(self.bullets[-1].radians)
+		)
+		self.bullets[-1].hit_x = self.reticle_sprite.center_x
+		self.bullets[-1].hit_y = self.reticle_sprite.center_y
+
 	def update(self, delta_time):
 		velocity = (
 			self.speed * math.cos(self.body_sprite.radians),
-			self.speed * math.sin(self.body_sprite.radians))
+			self.speed * math.sin(self.body_sprite.radians)
+		)
 		self.body_sprite.velocity = velocity
 		self.turret_sprite.velocity = velocity
 		self.turret_lock_sprite.velocity = velocity
@@ -66,3 +90,7 @@ class Tank:
 		self.crosshair_sprite.center_y = aim_coord_y
 		self.reticle_sprite.center_x = aim_coord_x
 		self.reticle_sprite.center_y = aim_coord_y
+
+		for index, bullet in enumerate(self.bullets):
+			if math.hypot(bullet.center_x - bullet.hit_x, bullet.center_y - bullet.hit_y) < 100:
+				self.bullets.pop(index)

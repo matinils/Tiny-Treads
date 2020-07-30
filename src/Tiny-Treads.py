@@ -1,8 +1,8 @@
 import arcade
 from Tank import Tank
 
-SCREEN_WIDTH = 1920
-SCREEN_HEIGHT = 1080
+SCREEN_WIDTH = 500
+SCREEN_HEIGHT = 500
 SCREEN_TITLE = "Tiny Treads"
 
 
@@ -47,6 +47,8 @@ class TinyTreads(arcade.Window):
 			self.tanks[0].aim_speed = 0.25
 		if symbol == arcade.key.F:
 			self.tanks[0].aim_speed = -0.25
+		if symbol == arcade.key.SPACE:
+			self.tanks[0].shoot()
 
 
 	def on_key_release(self, symbol: int, modifiers: int):
