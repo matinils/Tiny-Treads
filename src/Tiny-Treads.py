@@ -49,18 +49,19 @@ class TinyTreads(arcade.Window):
 				self.tanks[0].tr_speed = 50
 			if symbol == arcade.key.E:
 				self.tanks[0].tr_speed = -50
-			if symbol == arcade.key.LSHIFT:
-				self.tanks[0].turret_lock = not self.tanks[0].turret_lock
-				self.tanks[0].turret_lock_sprite.alpha = (255 if self.tanks[0].turret_lock else 0)
 			if symbol == arcade.key.R:
 				self.tanks[0].aim_speed = 0.25
 			if symbol == arcade.key.F:
 				self.tanks[0].aim_speed = -0.25
-			if symbol == arcade.key.SPACE:
-				self.tanks[0].shoot()
+
 
 	def on_key_press(self, symbol: int, modifiers: int):
 		self.input_stack.append(symbol)
+		if symbol == arcade.key.SPACE:
+			self.tanks[0].shoot()
+		if symbol == arcade.key.LSHIFT:
+			self.tanks[0].turret_lock = not self.tanks[0].turret_lock
+			self.tanks[0].turret_lock_sprite.alpha = (255 if self.tanks[0].turret_lock else 0)
 
 	def on_key_release(self, symbol: int, modifiers: int):
 		self.input_stack = [s for s in self.input_stack if s != symbol]
