@@ -25,7 +25,8 @@ class TinyTreads(arcade.Window):
 		self.tank_sprites.draw()
 		for tank in self.tanks:
 			for explosion in tank.explosions:
-				arcade.draw_circle_filled(*explosion, arcade.color.WHITE)
+				arcade.draw_circle_filled(*explosion)
+			tank.draw_to_screen()
 
 	def on_update(self, delta_time: float):
 		self.handle_input()

@@ -110,12 +110,16 @@ class Tank:
 				self.loaded_ammo = self.remaining_ammo
 				self.remaining_ammo = 0
 
+	def draw_to_screen(self):
+		arcade.draw_text(f"+ {self.remaining_ammo}", 5 + self.magazine_size*30, 5, arcade.color.WHITE, 30.0)
+
 	def update(self, delta_time):
 		self.reload_timer -= delta_time
 		for ammo in self.ammo_sprites:
 			ammo.alpha = 0
 		for i in range(self.loaded_ammo):
 			self.ammo_sprites[-i - 1].alpha = 255
+
 
 		velocity = (
 			self.speed * math.cos(self.body_sprite.radians),
@@ -138,10 +142,12 @@ class Tank:
 		self.reticle_sprite.center_y = aim_coord_y
 
 		for index, explosion in enumerate(self.explosions):
-			if explosion[2] > 20:
+			if explosion[3][3] <= 0:
 				self.explosions.pop(index)
+			if explosion[2] > 40:
+				explosion[3] = explosion[3][:3] + (explosion[3][3] - 1000 * delta_time,)
 			else:
-				explosion[2] += 5
+				explosion[2] += 80 * delta_time
 
 		for index, bullet in enumerate(self.bullets):
 			new_dist = math.hypot(
@@ -150,7 +156,7 @@ class Tank:
 			)
 			if bullet.prev_dist < new_dist:
 				self.bullets.pop(index)
-				self.explosions.append([bullet.hit_x, bullet.hit_y, 0])
+				self.explosions.append([bullet.hit_x, bullet.hit_y, 0, (255,255,255,255)])
 				bullet.kill()
 			else:
 				bullet.prev_dist = new_dist
