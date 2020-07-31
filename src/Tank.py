@@ -13,6 +13,7 @@ class Tank:
 		self.loaded_ammo = magazine_size
 		self.reload_timer = 0
 		self.reloading = False
+		self.reload_time = 3.0
 
 		self.speed = 0
 		self.br_speed = 0
@@ -103,7 +104,7 @@ class Tank:
 	def reload(self):
 		ammo_delta = self.magazine_size - self.loaded_ammo
 		if ammo_delta > 0 and self.remaining_ammo > 0:
-			self.reload_timer = 5
+			self.reload_timer = self.reload_time
 			self.reloading = True
 
 	def complete_reload(self):
@@ -120,6 +121,10 @@ class Tank:
 		arcade.draw_text(f"+ {self.remaining_ammo}", 5 + self.magazine_size*30, 5, arcade.color.WHITE, 30.0)
 		for explosion in self.explosions:
 			arcade.draw_circle_filled(*explosion)
+		if self.reloading:
+			arcade.draw_rectangle_outline(5 + self.magazine_size*30 / 2, 25, self.magazine_size*30 - 10, 30, arcade.color.WHITE)
+			progress = self.magazine_size - (self.reload_timer / self.reload_time * self.magazine_size)
+			arcade.draw_rectangle_filled(5 + progress*30 / 2, 25, max(progress*30 - 10, 0), 30, arcade.color.WHITE)
 
 	def update(self, delta_time):
 		self.reload_timer -= delta_time
@@ -128,8 +133,11 @@ class Tank:
 		for i in range(self.loaded_ammo):
 			self.ammo_sprites[-i - 1].alpha = 255
 
-		if self.reloading and self.reload_timer <= 0:
-			self.complete_reload()
+		if self.reloading:
+			for ammo in self.ammo_sprites:
+				ammo.alpha = 0
+			if self.reload_timer <= 0:
+				self.complete_reload()
 
 
 		velocity = (
