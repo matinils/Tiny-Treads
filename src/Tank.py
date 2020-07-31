@@ -125,7 +125,8 @@ class Tank:
 		if self.reloading:
 			arcade.draw_rectangle_outline(5 + self.magazine_size*30 / 2, 25, self.magazine_size*30 - 10, 30, arcade.color.WHITE)
 			progress = self.magazine_size - (self.reload_timer / self.reload_time * self.magazine_size)
-			arcade.draw_rectangle_filled(5 + progress*30 / 2, 25, max(progress*30 - 10, 0), 30, arcade.color.WHITE)
+			p_mult = (self.magazine_size*30 - 10) / (self.magazine_size*30)
+			arcade.draw_rectangle_filled(10 + progress*30/2*p_mult, 25, progress*30*p_mult, 30, arcade.color.WHITE)
 
 	def update(self, delta_time):
 		self.reload_timer -= delta_time
