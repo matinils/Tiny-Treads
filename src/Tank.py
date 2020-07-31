@@ -1,12 +1,13 @@
 import arcade
 import math
+import Enums
 from VSprite import VSprite
 
 class Tank:
 
 	SPRITE_SHEET_PATH = "./../res/sprite-sheet.png"
 
-	def __init__(self, sprite_pos, x, y, angle, max_ad, magazine_size, rem_ammo):
+	def __init__(self, sprite_pos, x, y, angle, max_ad, magazine_size, rem_ammo, player_type):
 		self.sprite_list = arcade.SpriteList()
 		self.remaining_ammo = rem_ammo
 		self.magazine_size = magazine_size
@@ -15,6 +16,7 @@ class Tank:
 		self.reloading = False
 		self.reload_time = 5
 		self.rechamber_time = 1.0
+		self.player_type = player_type
 
 		self.speed = 0
 		self.br_speed = 0
@@ -65,16 +67,17 @@ class Tank:
 		self.bullet_sprite_pos = (sprite_pos[0] + 98, sprite_pos[1])
 
 		self.ammo_sprites = []
-		for i in range(self.loaded_ammo):
-			self.ammo_sprites.append(VSprite(
-				Tank.SPRITE_SHEET_PATH, 3.0,
-				*self.bullet_sprite_pos, 15, 6,
-				15 + i*30, 30
-			))
-		for ammo in self.ammo_sprites:
-			ammo.angle = 90
-			ammo.alpha = 0
-			self.sprite_list.append(ammo)
+		if self.player_type == Enums.PlayerType.PLAYER1:
+			for i in range(self.loaded_ammo):
+				self.ammo_sprites.append(VSprite(
+					Tank.SPRITE_SHEET_PATH, 3.0,
+					*self.bullet_sprite_pos, 15, 6,
+					15 + i*30, 30
+				))
+			for ammo in self.ammo_sprites:
+				ammo.angle = 90
+				ammo.alpha = 0
+				self.sprite_list.append(ammo)
 
 		self.explosions = []
 
@@ -106,7 +109,7 @@ class Tank:
 				self.bullets[-1].center_y - self.bullets[-1].hit_y
 			)
 			self.sprite_list.append(self.bullets[-1])
-		elif self.loaded_ammo == 0:
+		elif self.loaded_ammo == 0 and not self.reloading:
 			self.reload()
 
 	def reload(self):
@@ -127,29 +130,29 @@ class Tank:
 
 	def draw_to_screen(self):
 		self.sprite_list.draw()
-
-		arcade.draw_text(f"+ {self.remaining_ammo}", 5 + self.magazine_size*30, 5, arcade.color.WHITE, 30.0)
 		for explosion in self.explosions:
 			arcade.draw_circle_filled(*explosion)
-		if self.reloading:
-			arcade.draw_rectangle_outline(5 + self.magazine_size*30 / 2, 25, self.magazine_size*30 - 10, 30, arcade.color.WHITE)
-			progress = self.magazine_size - (self.reload_timer / self.reload_time * self.magazine_size)
-			pmul = (self.magazine_size*30 - 10) / (self.magazine_size*30)
-			arcade.draw_rectangle_filled(10 + progress*30/2*pmul, 25, progress*30*pmul, 30, arcade.color.WHITE)
+
+		if self.player_type == Enums.PlayerType.PLAYER1:
+			arcade.draw_text(f"+ {self.remaining_ammo}", 5 + self.magazine_size*30, 5, arcade.color.WHITE, 30.0)
+			if self.reloading:
+				arcade.draw_rectangle_outline(5 + self.magazine_size * 30 / 2, 25, self.magazine_size * 30 - 10, 30, arcade.color.WHITE)
+				progress = self.magazine_size - (self.reload_timer / self.reload_time * self.magazine_size)
+				pmul = (self.magazine_size * 30 - 10) / (self.magazine_size * 30)
+				arcade.draw_rectangle_filled(10 + progress * 30 / 2 * pmul, 25, progress * 30 * pmul, 30, arcade.color.WHITE)
 
 	def update(self, delta_time):
 		self.reload_timer -= delta_time
-		for ammo in self.ammo_sprites:
-			ammo.alpha = 0
-		for i in range(self.loaded_ammo):
-			self.ammo_sprites[-i - 1].alpha = 255
-
+		if self.player_type == Enums.PlayerType.PLAYER1:
+			for ammo in self.ammo_sprites:
+				ammo.alpha = 0
+			for i in range(self.loaded_ammo):
+				self.ammo_sprites[-i - 1].alpha = 255
 		if self.reloading:
 			for ammo in self.ammo_sprites:
 				ammo.alpha = 0
 			if self.reload_timer <= 0:
 				self.complete_reload()
-
 
 		velocity = (
 			self.speed * math.cos(self.body_sprite.radians),
