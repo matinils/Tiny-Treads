@@ -23,6 +23,9 @@ class TinyTreads(arcade.Window):
 	def on_draw(self):
 		arcade.start_render()
 		self.tank_sprites.draw()
+		for tank in self.tanks:
+			for explosion in tank.explosions:
+				arcade.draw_circle_filled(*explosion, arcade.color.WHITE)
 
 	def on_update(self, delta_time: float):
 		self.handle_input()
@@ -59,6 +62,8 @@ class TinyTreads(arcade.Window):
 		self.input_stack.append(symbol)
 		if symbol == arcade.key.SPACE:
 			self.tanks[0].shoot()
+		if symbol == arcade.key.C:
+			self.tanks[0].reload()
 		if symbol == arcade.key.LSHIFT:
 			self.tanks[0].turret_lock = not self.tanks[0].turret_lock
 			self.tanks[0].turret_lock_sprite.alpha = (255 if self.tanks[0].turret_lock else 0)
@@ -66,8 +71,8 @@ class TinyTreads(arcade.Window):
 	def on_key_release(self, symbol: int, modifiers: int):
 		self.input_stack = [s for s in self.input_stack if s != symbol]
 
-	def add_tank(self, sprite_pos, x, y, angle, max_ad):
-		tank = Tank(self.tank_sprites, sprite_pos, x, y, angle, max_ad)
+	def add_tank(self, sprite_pos, x, y, angle, max_ad, mag_size, start_ammo):
+		tank = Tank(self.tank_sprites, sprite_pos, x, y, angle, max_ad, mag_size, start_ammo)
 		self.tank_sprites.append(tank.body_sprite)
 		self.tank_sprites.append(tank.turret_sprite)
 		self.tank_sprites.append(tank.turret_lock_sprite)
@@ -77,7 +82,7 @@ class TinyTreads(arcade.Window):
 
 	def setup(self):
 		arcade.set_background_color((20, 20, 20))
-		self.add_tank(self.tank_sprite_dict["Tank 1"], SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 90, 500)
+		self.add_tank(self.tank_sprite_dict["Tank 1"], SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 90, 500, 5, 10)
 
 if __name__ == '__main__':
 	app = TinyTreads()
