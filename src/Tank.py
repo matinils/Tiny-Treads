@@ -52,6 +52,8 @@ class Tank:
 		self.bullets = []
 		self.bullet_sprite_pos = (sprite_pos[0] + 98, sprite_pos[1])
 
+		self.explosions = []
+
 	def turret_tip(self):
 		return (
 			self.turret_sprite.center_x + 50 * math.cos(self.turret_sprite.radians),
@@ -98,6 +100,12 @@ class Tank:
 		self.reticle_sprite.center_x = aim_coord_x
 		self.reticle_sprite.center_y = aim_coord_y
 
+		for index, explosion in enumerate(self.explosions):
+			if explosion[2] > 20:
+				self.explosions.pop(index)
+			else:
+				explosion[2] += 5
+
 		for index, bullet in enumerate(self.bullets):
 			new_dist = math.hypot(
 				bullet.center_x - bullet.hit_x,
@@ -105,6 +113,9 @@ class Tank:
 			)
 			if bullet.prev_dist < new_dist:
 				self.bullets.pop(index)
+				self.explosions.append([bullet.hit_x, bullet.hit_y, 0])
 				bullet.kill()
 			else:
 				bullet.prev_dist = new_dist
+
+
