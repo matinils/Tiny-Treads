@@ -13,7 +13,8 @@ class Tank:
 		self.loaded_ammo = magazine_size
 		self.reload_timer = 0
 		self.reloading = False
-		self.reload_time = 3.0
+		self.reload_time = 5
+		self.rechamber_time = 1.0
 
 		self.speed = 0
 		self.br_speed = 0
@@ -81,7 +82,7 @@ class Tank:
 
 	def shoot(self):
 		if self.loaded_ammo > 0 and self.reload_timer <= 0:
-			self.reload_timer = 1
+			self.reload_timer = self.rechamber_time
 			self.loaded_ammo -= 1
 			self.bullets.append(VSprite(
 				Tank.SPRITE_SHEET_PATH, 1.0,
