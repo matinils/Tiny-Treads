@@ -56,8 +56,6 @@ class Tank:
 		self.bullets = []
 		self.bullet_sprite_pos = (sprite_pos[0] + 98, sprite_pos[1])
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 		self.ammo_sprites = []
 		for i in range(self.loaded_ammo):
 			self.ammo_sprites.append(VSprite(
@@ -69,12 +67,9 @@ class Tank:
 			ammo.angle = 90
 			ammo.alpha = 0
 			self.sprite_list.append(ammo)
-=======
+
 		self.explosions = []
->>>>>>> 7cec47732aa2ed507f86efc5e547033d3cba18a7
-=======
-		self.explosions = []
->>>>>>> 7cec47732aa2ed507f86efc5e547033d3cba18a7
+
 
 	def turret_tip(self):
 		return (
