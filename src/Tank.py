@@ -112,6 +112,8 @@ class Tank:
 
 	def draw_to_screen(self):
 		arcade.draw_text(f"+ {self.remaining_ammo}", 5 + self.magazine_size*30, 5, arcade.color.WHITE, 30.0)
+		for explosion in self.explosions:
+			arcade.draw_circle_filled(*explosion)
 
 	def update(self, delta_time):
 		self.reload_timer -= delta_time
