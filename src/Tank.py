@@ -12,6 +12,7 @@ class Tank:
 		self.magazine_size = magazine_size
 		self.loaded_ammo = magazine_size
 		self.reload_timer = 0
+		self.reloading = False
 
 		self.speed = 0
 		self.br_speed = 0
@@ -103,12 +104,17 @@ class Tank:
 		ammo_delta = self.magazine_size - self.loaded_ammo
 		if ammo_delta > 0 and self.remaining_ammo > 0:
 			self.reload_timer = 5
-			if ammo_delta <= self.remaining_ammo:
-				self.remaining_ammo -= ammo_delta
-				self.loaded_ammo = self.magazine_size
-			else:
-				self.loaded_ammo = self.remaining_ammo
-				self.remaining_ammo = 0
+			self.reloading = True
+
+	def complete_reload(self):
+		self.reloading = False
+		ammo_delta = self.magazine_size - self.loaded_ammo
+		if ammo_delta <= self.remaining_ammo:
+			self.remaining_ammo -= ammo_delta
+			self.loaded_ammo = self.magazine_size
+		else:
+			self.loaded_ammo = self.remaining_ammo
+			self.remaining_ammo = 0
 
 	def draw_to_screen(self):
 		arcade.draw_text(f"+ {self.remaining_ammo}", 5 + self.magazine_size*30, 5, arcade.color.WHITE, 30.0)
@@ -121,6 +127,9 @@ class Tank:
 			ammo.alpha = 0
 		for i in range(self.loaded_ammo):
 			self.ammo_sprites[-i - 1].alpha = 255
+
+		if self.reloading and self.reload_timer <= 0:
+			self.complete_reload()
 
 
 		velocity = (
