@@ -10,19 +10,12 @@ class TinyTreads(arcade.Window):
 	def __init__(self):
 		super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
 		arcade.set_background_color(arcade.color.ALLOY_ORANGE)
-
 		self.tank_sprite_dict = {"Tank 1" : (0,0)}
-
-		self.all_sprites = arcade.SpriteList()
-		self.tank_sprites = arcade.SpriteList()
-
 		self.tanks = []
-
 		self.input_stack = []
 
 	def on_draw(self):
 		arcade.start_render()
-		self.tank_sprites.draw()
 		for tank in self.tanks:
 			tank.draw_to_screen()
 
@@ -30,14 +23,12 @@ class TinyTreads(arcade.Window):
 		self.handle_input()
 		for t in self.tanks:
 			t.update(delta_time)
-		self.tank_sprites.on_update(delta_time)
 
 	def handle_input(self):
 		self.tanks[0].speed = 0
 		self.tanks[0].br_speed = 0
 		self.tanks[0].tr_speed = 0
 		self.tanks[0].aim_speed = 0.0
-
 		for symbol in self.input_stack:
 			if symbol == arcade.key.W:
 				self.tanks[0].speed = 50
@@ -56,7 +47,6 @@ class TinyTreads(arcade.Window):
 			if symbol == arcade.key.F:
 				self.tanks[0].aim_speed = -0.25
 
-
 	def on_key_press(self, symbol: int, modifiers: int):
 		self.input_stack.append(symbol)
 		if symbol == arcade.key.SPACE:
@@ -71,12 +61,7 @@ class TinyTreads(arcade.Window):
 		self.input_stack = [s for s in self.input_stack if s != symbol]
 
 	def add_tank(self, sprite_pos, x, y, angle, max_ad, mag_size, start_ammo):
-		tank = Tank(self.tank_sprites, sprite_pos, x, y, angle, max_ad, mag_size, start_ammo)
-		self.tank_sprites.append(tank.body_sprite)
-		self.tank_sprites.append(tank.turret_sprite)
-		self.tank_sprites.append(tank.turret_lock_sprite)
-		self.tank_sprites.append(tank.reticle_sprite)
-		self.tank_sprites.append(tank.crosshair_sprite)
+		tank = Tank(sprite_pos, x, y, angle, max_ad, mag_size, start_ammo)
 		self.tanks.append(tank)
 
 	def setup(self):

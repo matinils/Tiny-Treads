@@ -6,8 +6,8 @@ class Tank:
 
 	SPRITE_SHEET_PATH = "./../res/sprite-sheet.png"
 
-	def __init__(self, sprite_list, sprite_pos, x, y, angle, max_ad, magazine_size, rem_ammo):
-		self.sprite_list = sprite_list
+	def __init__(self, sprite_pos, x, y, angle, max_ad, magazine_size, rem_ammo):
+		self.sprite_list = arcade.SpriteList()
 		self.remaining_ammo = rem_ammo
 		self.magazine_size = magazine_size
 		self.loaded_ammo = magazine_size
@@ -30,6 +30,7 @@ class Tank:
 			x, y
 		)
 		self.body_sprite.angle = angle
+		self.sprite_list.append(self.body_sprite)
 
 		self.turret_sprite = VSprite(
 			Tank.SPRITE_SHEET_PATH, 1.0,
@@ -37,24 +38,28 @@ class Tank:
 			x, y
 		)
 		self.turret_sprite.angle = angle
+		self.sprite_list.append(self.turret_sprite)
 
 		self.turret_lock_sprite = VSprite(
 			Tank.SPRITE_SHEET_PATH, 1.0,
 			sprite_pos[0] + 75, sprite_pos[1], 10, 14,
 			x, y
 		)
+		self.sprite_list.append(self.turret_lock_sprite)
 
 		self.reticle_sprite = VSprite(
 			Tank.SPRITE_SHEET_PATH, 1.0,
 			sprite_pos[0] + 85, sprite_pos[1], 13, 13,
 			x, y + 120
 		)
+		self.sprite_list.append(self.reticle_sprite)
 
 		self.crosshair_sprite = VSprite(
 			Tank.SPRITE_SHEET_PATH, 1.0,
 			sprite_pos[0] + 75, sprite_pos[1] + 14, 27, 27,
 			x, y + 120
 		)
+		self.sprite_list.append(self.crosshair_sprite)
 
 		self.bullets = []
 		self.bullet_sprite_pos = (sprite_pos[0] + 98, sprite_pos[1])
@@ -101,6 +106,8 @@ class Tank:
 				self.bullets[-1].center_y - self.bullets[-1].hit_y
 			)
 			self.sprite_list.append(self.bullets[-1])
+		elif self.loaded_ammo == 0:
+			self.reload()
 
 	def reload(self):
 		ammo_delta = self.magazine_size - self.loaded_ammo
@@ -119,14 +126,16 @@ class Tank:
 			self.remaining_ammo = 0
 
 	def draw_to_screen(self):
+		self.sprite_list.draw()
+
 		arcade.draw_text(f"+ {self.remaining_ammo}", 5 + self.magazine_size*30, 5, arcade.color.WHITE, 30.0)
 		for explosion in self.explosions:
 			arcade.draw_circle_filled(*explosion)
 		if self.reloading:
 			arcade.draw_rectangle_outline(5 + self.magazine_size*30 / 2, 25, self.magazine_size*30 - 10, 30, arcade.color.WHITE)
 			progress = self.magazine_size - (self.reload_timer / self.reload_time * self.magazine_size)
-			p_mult = (self.magazine_size*30 - 10) / (self.magazine_size*30)
-			arcade.draw_rectangle_filled(10 + progress*30/2*p_mult, 25, progress*30*p_mult, 30, arcade.color.WHITE)
+			pmul = (self.magazine_size*30 - 10) / (self.magazine_size*30)
+			arcade.draw_rectangle_filled(10 + progress*30/2*pmul, 25, progress*30*pmul, 30, arcade.color.WHITE)
 
 	def update(self, delta_time):
 		self.reload_timer -= delta_time
@@ -181,5 +190,7 @@ class Tank:
 				bullet.kill()
 			else:
 				bullet.prev_dist = new_dist
+
+		self.sprite_list.on_update(delta_time)
 
 
