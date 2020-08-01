@@ -60,6 +60,8 @@ class Tank:
 			sprite_pos[0] + 85, sprite_pos[1], 13, 13,
 			x, y + 120
 		)
+		if self.player_type == Enums.PlayerType.ENEMY:
+			self.reticle_sprite.alpha = 0
 		self.sprite_list.append(self.reticle_sprite)
 
 		self.crosshair_sprite = VSprite(
@@ -67,6 +69,8 @@ class Tank:
 			sprite_pos[0] + 75, sprite_pos[1] + 14, 27, 27,
 			x, y + 120
 		)
+		if self.player_type == Enums.PlayerType.ENEMY:
+			self.crosshair_sprite.alpha = 0
 		self.sprite_list.append(self.crosshair_sprite)
 
 		self.bullets = []

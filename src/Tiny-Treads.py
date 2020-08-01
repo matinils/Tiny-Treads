@@ -71,7 +71,7 @@ class TinyTreads(arcade.Window):
 	def setup(self):
 		arcade.set_background_color((20, 20, 20))
 		self.add_tank(self.tank_sprite_dict["Tank 1"], SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 90, 500, 5, 10, Enums.PlayerType.PLAYER1)
-		self.add_tank(self.tank_sprite_dict["Tank 1"], SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, 0, 500, 5, 10,
+		self.add_tank(self.tank_sprite_dict["Tank 1"], SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, 0, 500, 5, 1000,
 					  Enums.PlayerType.ENEMY)
 
 
