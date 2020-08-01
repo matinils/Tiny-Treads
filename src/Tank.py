@@ -19,6 +19,10 @@ class Tank:
 		self.rechamber_time = 1.0
 		self.player_type = player_type
 		self.tank_list = tank_list
+		self.max_armor = 100
+		self.max_health = 100
+		self.health = self.max_health
+		self.armor = self.max_armor
 
 		self.speed = 0
 		self.br_speed = 0
@@ -28,6 +32,7 @@ class Tank:
 		self.aim_distance = 0.0
 		self.aim_speed = 0
 		self.turret_lock = True
+		self.explosion_size = 40
 
 		self.x_target = random.randint(0,1000)
 		self.y_target = random.randint(0,1000)
@@ -151,6 +156,13 @@ class Tank:
 				pmul = (self.magazine_size * 30 - 10) / (self.magazine_size * 30)
 				arcade.draw_rectangle_filled(10 + progress * 30 / 2 * pmul, 25, progress * 30 * pmul, 30, arcade.color.WHITE)
 
+		arcade.draw_rectangle_outline(self.body_sprite.center_x, self.body_sprite.bottom - 20, 100, 20, arcade.color.GREEN)
+		progress = self.health / self.max_health
+		arcade.draw_rectangle_filled(self.body_sprite.center_x - 50 + 50*progress, self.body_sprite.bottom - 20, 100*progress, 20, arcade.color.GREEN)
+		arcade.draw_rectangle_outline(self.body_sprite.center_x, self.body_sprite.bottom - 50, 100, 20, arcade.color.BLUE)
+		progress = self.armor / self.max_armor
+		arcade.draw_rectangle_filled(self.body_sprite.center_x - 50 + 50 * progress, self.body_sprite.bottom - 50, 100 * progress, 20, arcade.color.BLUE)
+
 	def get_dist_between_angles(self, a1, a2):
 		diff = abs(a1 - a2)
 		return abs(diff - 360) if diff > 180 else diff
@@ -167,6 +179,14 @@ class Tank:
 				ammo.alpha = 0
 			if self.reload_timer <= 0:
 				self.complete_reload()
+
+		for tank in self.tank_list:
+			for explosion in tank.explosions:
+				if self.body_sprite.collides_with_point((explosion[0], explosion[1])) and explosion[2] == 0:
+					self.health -= 100 * (1 - (self.armor / self.max_armor))
+					self.armor -= 50
+					self.health = max(self.health, 0)
+					self.armor = max(self.armor, 0)
 
 		velocity = (
 			self.speed * math.cos(self.body_sprite.radians),
@@ -191,7 +211,7 @@ class Tank:
 		for index, explosion in enumerate(self.explosions):
 			if explosion[3][3] <= 0:
 				self.explosions.pop(index)
-			if explosion[2] > 40:
+			if explosion[2] > self.explosion_size:
 				explosion[3] = explosion[3][:3] + (explosion[3][3] - 1000 * delta_time,)
 			else:
 				explosion[2] += 80 * delta_time
@@ -231,7 +251,7 @@ class Tank:
 							self.aim_speed = -0.25
 					else:
 						self.aim_speed = 0
-					if abs(target_distance - reticle_distance) < 50:
+					if tank.body_sprite.collides_with_point(self.reticle_sprite.position):
 						self.shoot()
 
 					travel_target_distance = math.sqrt((self.x_target - self.body_sprite.center_x)**2 + (self.y_target - self.body_sprite.center_y)**2)
