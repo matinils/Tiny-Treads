@@ -1,5 +1,6 @@
 import arcade
 import math
+import random
 import Enums
 from VSprite import VSprite
 
@@ -27,6 +28,9 @@ class Tank:
 		self.aim_distance = 0.0
 		self.aim_speed = 0
 		self.turret_lock = True
+
+		self.x_target = random.randint(0,1000)
+		self.y_target = random.randint(0,1000)
 
 		self.body_sprite = VSprite(
 			Tank.SPRITE_SHEET_PATH, 1.0, 
@@ -223,8 +227,26 @@ class Tank:
 							self.aim_speed = -0.25
 					else:
 						self.aim_speed = 0
+					if abs(target_distance - reticle_distance) < 50:
 						self.shoot()
-					
+
+					travel_target_distance = math.sqrt((self.x_target - self.body_sprite.center_x)**2 + (self.y_target - self.body_sprite.center_y)**2)
+					travel_target_angle = 180 + (math.atan2(self.body_sprite.center_y - self.y_target, self.body_sprite.center_x - self.x_target) * 57.29)
+					if travel_target_distance < 1:
+						self.speed = 0
+						self.x_target = random.randint(0,1000)
+						self.y_target = random.randint(0,1000)
+					else:
+						if self.get_dist_between_angles(travel_target_angle, self.body_sprite.angle) > 1:
+							if self.get_dist_between_angles(travel_target_angle,self.body_sprite.angle + 1) < self.get_dist_between_angles(travel_target_angle, self.body_sprite.angle - 1):
+								self.body_sprite.angle += 50 * delta_time
+							else:
+								self.body_sprite.angle -= 50 * delta_time
+						else:
+							self.speed = 50
+
+
+
 
 
 
