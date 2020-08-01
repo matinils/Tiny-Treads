@@ -63,7 +63,7 @@ class TinyTreads(arcade.Window):
 		self.input_stack = [s for s in self.input_stack if s != symbol]
 
 	def add_tank(self, sprite_pos, x, y, angle, max_ad, mag_size, start_ammo, player_type):
-		tank = Tank(sprite_pos, x, y, angle, max_ad, mag_size, start_ammo, player_type)
+		tank = Tank(sprite_pos, x, y, angle, max_ad, mag_size, start_ammo, player_type, self.tanks)
 		if player_type == Enums.PlayerType.PLAYER1:
 			self.player1_tank = tank
 		self.tanks.append(tank)
@@ -71,7 +71,7 @@ class TinyTreads(arcade.Window):
 	def setup(self):
 		arcade.set_background_color((20, 20, 20))
 		self.add_tank(self.tank_sprite_dict["Tank 1"], SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 90, 500, 5, 10, Enums.PlayerType.PLAYER1)
-		self.add_tank(self.tank_sprite_dict["Tank 1"], SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, 90, 500, 5, 10,
+		self.add_tank(self.tank_sprite_dict["Tank 1"], SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, 0, 500, 5, 10,
 					  Enums.PlayerType.ENEMY)
 
 

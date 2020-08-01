@@ -7,7 +7,7 @@ class Tank:
 
 	SPRITE_SHEET_PATH = "./../res/sprite-sheet.png"
 
-	def __init__(self, sprite_pos, x, y, angle, max_ad, magazine_size, rem_ammo, player_type):
+	def __init__(self, sprite_pos, x, y, angle, max_ad, magazine_size, rem_ammo, player_type, tank_list):
 		self.sprite_list = arcade.SpriteList()
 		self.remaining_ammo = rem_ammo
 		self.magazine_size = magazine_size
@@ -17,11 +17,13 @@ class Tank:
 		self.reload_time = 5
 		self.rechamber_time = 1.0
 		self.player_type = player_type
+		self.tank_list = tank_list
 
 		self.speed = 0
 		self.br_speed = 0
 		self.tr_speed = 0
 		self.max_ad = max_ad
+		self.min_ad = 120
 		self.aim_distance = 0.0
 		self.aim_speed = 0
 		self.turret_lock = True
@@ -141,6 +143,10 @@ class Tank:
 				pmul = (self.magazine_size * 30 - 10) / (self.magazine_size * 30)
 				arcade.draw_rectangle_filled(10 + progress * 30 / 2 * pmul, 25, progress * 30 * pmul, 30, arcade.color.WHITE)
 
+	def get_dist_between_angles(self, a1, a2):
+		diff = abs(a1 - a2)
+		return abs(diff - 360) if diff > 180 else diff
+
 	def update(self, delta_time):
 		self.reload_timer -= delta_time
 		if self.player_type == Enums.PlayerType.PLAYER1:
@@ -166,7 +172,7 @@ class Tank:
 
 		self.aim_distance += self.aim_speed * delta_time
 		self.aim_distance = max(min(self.aim_distance, 1.0), 0.0)
-		aim_coord = (120 + (self.max_ad - 120) * self.aim_distance)
+		aim_coord = (self.min_ad + (self.max_ad - self.min_ad) * self.aim_distance)
 		aim_coord_x = aim_coord * math.cos(self.turret_sprite.radians) + self.turret_sprite.center_x
 		aim_coord_y = aim_coord * math.sin(self.turret_sprite.radians) + self.turret_sprite.center_y
 		self.crosshair_sprite.center_x = aim_coord_x
@@ -193,6 +199,34 @@ class Tank:
 				bullet.kill()
 			else:
 				bullet.prev_dist = new_dist
+
+		while self.turret_sprite.angle > 360:
+			self.turret_sprite.angle -= 360
+		while self.turret_sprite.angle < 0:
+			self.turret_sprite.angle += 360
+
+		if self.player_type == Enums.PlayerType.ENEMY:
+			for tank in self.tank_list:
+				if tank.player_type == Enums.PlayerType.PLAYER1:
+					target_angle = 180 + (math.atan2(self.body_sprite.center_y - tank.body_sprite.center_y, self.body_sprite.center_x - tank.body_sprite.center_x) * 57.29)
+					if self.get_dist_between_angles(target_angle, self.turret_sprite.angle) > 1:
+						if self.get_dist_between_angles(target_angle, self.turret_sprite.angle + 1) < self.get_dist_between_angles(target_angle, self.turret_sprite.angle - 1):
+							self.turret_sprite.angle += 50 * delta_time
+						else:
+							self.turret_sprite.angle -= 50 * delta_time
+					target_distance = math.sqrt((self.body_sprite.center_x - tank.body_sprite.center_x)**2 + (self.body_sprite.center_y - tank.body_sprite.center_y)**2)
+					reticle_distance = math.sqrt((self.body_sprite.center_x - self.reticle_sprite.center_x)**2 + (self.body_sprite.center_y - self.reticle_sprite.center_y)**2)
+					if abs(target_distance - reticle_distance) > 1:
+						if target_distance > reticle_distance:
+							self.aim_speed = 0.25
+						else:
+							self.aim_speed = -0.25
+					else:
+						self.aim_speed = 0
+						self.shoot()
+					
+
+
 
 		self.sprite_list.on_update(delta_time)
 
