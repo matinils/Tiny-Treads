@@ -23,6 +23,7 @@ class Tank:
 		self.max_health = 100
 		self.health = self.max_health
 		self.armor = self.max_armor
+		self.disabled = False
 
 		self.speed = 0
 		self.br_speed = 0
@@ -187,6 +188,8 @@ class Tank:
 					self.armor -= 50
 					self.health = max(self.health, 0)
 					self.armor = max(self.armor, 0)
+		if self.health <= 0:
+			self.disabled = True
 
 		velocity = (
 			self.speed * math.cos(self.body_sprite.radians),
