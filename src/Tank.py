@@ -2,6 +2,7 @@ import arcade
 import math
 import random
 import Enums
+import Geometry as geom
 from VSprite import VSprite
 
 class Tank:
@@ -24,6 +25,7 @@ class Tank:
 		self.health = self.max_health
 		self.armor = self.max_armor
 		self.disabled = False
+		self.explosions_hit_by = []
 
 		self.speed = 0
 		self.br_speed = 0
@@ -146,6 +148,7 @@ class Tank:
 
 	def draw_to_screen(self):
 		self.sprite_list.draw()
+		self.body_sprite.draw_hit_box(arcade.color.RED, 5)
 		for explosion in self.explosions:
 			arcade.draw_circle_filled(*explosion)
 
@@ -183,11 +186,19 @@ class Tank:
 
 		for tank in self.tank_list:
 			for explosion in tank.explosions:
-				if self.body_sprite.collides_with_point((explosion[0], explosion[1])) and explosion[2] == 0:
-					self.health -= 100 * (1 - (self.armor / self.max_armor))
-					self.armor -= 50
-					self.health = max(self.health, 0)
-					self.armor = max(self.armor, 0)
+				if explosion not in self.explosions_hit_by:
+					p = self.body_sprite.points
+					if self.body_sprite.collides_with_point((explosion[0], explosion[1])):
+						self.explosions_hit_by.append(explosion)
+						self.health -= 100 * (1 - (self.armor / self.max_armor))
+						self.armor -= 50
+						self.health = max(self.health, 0)
+						self.armor = max(self.armor, 0)
+					elif geom.circle_intersect_rectangle((explosion[0], explosion[1]), explosion[2], p[0], p[1], p[2], p[3]):
+						self.explosions_hit_by.append(explosion)
+						self.health -= 100 * (1 - (explosion[2] / tank.explosion_size)) * (1 - (self.armor / self.max_armor))
+						explosion[3] = (255, 0, 0) + (explosion[3][3],)
+
 		if self.health <= 0:
 			self.disabled = True
 
